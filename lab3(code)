@@ -1,0 +1,74 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+ 
+char *get_str() {
+    char buf[81] = {0};
+    char *res = NULL;
+    int len = 0;
+    int n = 0;
+    do {
+        n = scanf("%80[^\n]", buf);
+        if (n < 0) {
+            if (!res) {
+                return NULL;
+            }
+                } else if (n > 0) {
+            int chunk_len = strlen(buf);
+            int str_len = len + chunk_len;
+            res = realloc(res, str_len + 1);
+            memcpy(res + len, buf, chunk_len);
+            len = str_len;
+        } else {
+            scanf("%*c");
+        }
+    } while (n > 0);
+    
+    if (len > 0) {
+        res[len] = '\0';
+    } else {
+        res = calloc(1, sizeof(char));
+    }
+    
+    return res;
+}
+ 
+char* solution(char *s) {
+    char answer[80] = {0};
+    strcat(answer, s);
+    char *vowels = "eyuioaEYUIOA";
+    int lastVowelIndex = -1;
+    for (int i = 0; i < strlen(s); i++) {
+        if (strchr(vowels, s[i]) != NULL) {
+            if (lastVowelIndex == -1) {
+                lastVowelIndex = i;
+            } else if (i - lastVowelIndex == 1) {
+                lastVowelIndex = i;
+            } else {
+                for (int j = lastVowelIndex + 1; j <= i - 1; j++) {
+                    answer[j] = toupper(answer[j]);
+                    //answer[j] = '=';
+                }
+                lastVowelIndex = i;
+            }
+            
+        }
+        
+    }
+    printf("%s\n", answer);
+    return answer;
+}
+ 
+int main() {
+    char *s = NULL;
+    do {
+        s = get_str();
+        if (s) {
+            printf("%s - ", s);
+            //char *response = 
+            solution(s);
+            //printf("%s\n", response);
+            free(s);
+        }  
+    } while (s);
+    return 0;
